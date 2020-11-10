@@ -45,6 +45,18 @@ variables:
     - 2015
 ```
 
+**request_path_list**
+
+例)
+
+```
+/api/v1/cities/:prefCode
+# /api/v1/cities/:prefCode/:cityCode
+/api/v1/cities/:year/:prefCode/:cityCode
+```
+
+※行頭に `#` がある行はリクエストをスキップ
+
 ## Run
 
 ライブラリをダウンロード
