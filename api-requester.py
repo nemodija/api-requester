@@ -46,16 +46,16 @@ for key in request_path.keys():
 
         # Extraction of placeholders
         var_keys = re.findall(placeholder, request_path)
-        variables = []
+        variables = {}
         for var_key in var_keys:
-            variables.append(config.get('variables', {}).get(key, {}).get(var_key, []))
+            variables[var_key] = (config.get('variables', {}).get(key, {}).get(var_key, []))
         print(variables)
 
-        for val in list(itertools.product(*variables)):
+        for val in [dict(zip(variables.keys(), r)) for r in list(itertools.product(*variables.values()))]:
             # Placeholder replacement
             replaced_request_path = request_path
-            for i, var_key in enumerate(var_keys):
-                replaced_request_path = replaced_request_path.replace(var_key, str(val[i]))
+            for var_key in var_keys:
+                replaced_request_path = replaced_request_path.replace(var_key, str(val[var_key]))
             url = urllib.parse.urljoin(base_url, replaced_request_path)
 
             # Create Resut Directory

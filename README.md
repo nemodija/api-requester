@@ -27,7 +27,7 @@ python --version
 ```yaml
 protocol: https
 hostname: example.com
-request_path_file: './request_list.yml'
+request_path_file: './request_path.yml'
 result:
   parent_dir_path: '.'
   dir_prefix: 'EXAMPLE'
@@ -46,7 +46,7 @@ variables:
       - 2015
 ```
 
-**request_list.yml**
+**request_path.yml**
 
 例)
 
