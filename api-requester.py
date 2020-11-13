@@ -64,7 +64,7 @@ for key in request_path.keys():
 
             # Request
             response = requests.get(url)
-            print('[{}] {}'.format(response.status_code, url))
+            print('[{}] ({:>8.4f}) {}'.format(response.status_code, response.elapsed.total_seconds(), url))
 
             # Output for result
             with open(os.path.join(response_dir, str(response.status_code)), mode='w') as rt:
