@@ -2,6 +2,14 @@ import os, sys, re, itertools, datetime, json
 import requests
 import yaml
 import urllib.parse
+import argparse
+
+"""
+CommandLine Options
+"""
+parser = argparse.ArgumentParser()
+parser.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
+args = parser.parse_args()
 
 """
 Read configuration
@@ -42,14 +50,16 @@ Request
 """
 for key in request_path.keys():
     for request_path in request_path.get(key):
-        print(request_path)
+        if args.verbose:
+            print(request_path)
 
         # Extraction of placeholders
         var_keys = re.findall(placeholder, request_path)
         variables = {}
         for var_key in var_keys:
             variables[var_key] = (config.get('variables', {}).get(key, {}).get(var_key, []))
-        print(variables)
+        if args.verbose:
+            print(variables)
 
         for val in [dict(zip(variables.keys(), r)) for r in list(itertools.product(*variables.values()))]:
             # Placeholder replacement
