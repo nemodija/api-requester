@@ -41,15 +41,16 @@ Read request path
 request_path_file = config.get('request_path_file', './request_path.yaml')
 if os.path.exists(request_path_file):
     with open(request_path_file) as file:
-        request_path = yaml.safe_load(file.read()) or {}
+        request_paths = yaml.safe_load(file.read()) or {}
 else:
-    request_path = {}
+    request_paths = {}
 
 """
 Request
 """
-for key in request_path.keys():
-    for request_path in request_path.get(key):
+for key in request_paths.keys():
+    print("# {}".format(key))
+    for request_path in request_paths.get(key):
         if args.verbose:
             print(request_path)
 
@@ -60,6 +61,9 @@ for key in request_path.keys():
             variables[var_key] = (config.get('variables', {}).get(key, {}).get(var_key, []))
         if args.verbose:
             print(variables)
+
+        if not list(itertools.product(*variables.values())):
+            print('[{}] ({:>8.4f}) {}'.format('---', 0, request_path))
 
         for val in [dict(zip(variables.keys(), r)) for r in list(itertools.product(*variables.values()))]:
             # Placeholder replacement
