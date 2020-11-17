@@ -35,6 +35,8 @@ result_dir_path = os.path.join(result_parent_dir_path, result_dir_name)
 
 placeholder = config.get('placeholder', r'(:\w+)')
 
+replacement_patterns = config.get('result', {}).get('replacement_patterns', [])
+
 """
 Read request path
 """
@@ -82,7 +84,13 @@ for key in request_paths.keys():
 
             # Output for result
             with open(os.path.join(response_dir, str(response.status_code)), mode='w') as rt:
+                res_text = response.text
+                for rp in replacement_patterns:
+                    if not rp.get('pattern'):
+                        continue
+                    res_text = re.sub(rp.get('pattern'), rp.get('repl', ''), res_text)
+
                 try:
-                    json.dump(json.loads(response.text), rt, ensure_ascii=False, indent=2, sort_keys=True)
+                    json.dump(json.loads(res_text), rt, ensure_ascii=False, indent=2, sort_keys=True)
                 except json.JSONDecodeError as e:
-                    rt.write(response.text)
+                    rt.write(res_text)
