@@ -9,6 +9,7 @@ CommandLine Options
 """
 parser = argparse.ArgumentParser()
 parser.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
+parser.add_argument("-g", "--groups", help="Instruct to execute groups", nargs='*')
 args = parser.parse_args()
 
 """
@@ -51,6 +52,8 @@ else:
 Request
 """
 for key in request_paths.keys():
+    if args.groups and key not in args.groups or []:
+        continue
     print("# {}".format(key))
     for request_path in request_paths.get(key):
         if args.verbose:
@@ -91,6 +94,6 @@ for key in request_paths.keys():
                     res_text = re.sub(rp.get('pattern'), rp.get('repl', ''), res_text)
 
                 try:
-                    json.dump(json.loads(res_text), rt, ensure_ascii=False, indent=2, sort_keys=True)
+                    json.dump(json.loads(res_text), rt, ensure_ascii=False, indent=2)
                 except json.JSONDecodeError as e:
                     rt.write(res_text)
